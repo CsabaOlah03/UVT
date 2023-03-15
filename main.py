@@ -207,13 +207,12 @@ class sorting:
         A[i] = A[j]
         A[j] = temp
 
-    # take median of three elements
     def __median_three(a, b, c):
         return sorted([a, b, c])[1]
 
     def __qs_part(A, lo, hi):
         mid = lo
-        p = sorting.__median_three(A[lo], A[(lo + hi) // 2], A[hi])  # pivot set to median of 3, as described in handout
+        p = sorting.__median_three(A[lo], A[(lo + hi) // 2], A[hi])
 
         while mid <= hi:
             if A[mid] < p:
@@ -227,25 +226,18 @@ class sorting:
                 mid += 1
         return (lo - 1), mid
 
-    # Quicksort implementation as described in handout.
-    # A: Array to sort
-    # write:    name of file to write sorted results to
-    # out:      name of file to write runtime to
-    # lo:       start index (1 after pivot in first case)
-    # hi:       end index
     def quick_sort_improved(A, lo, hi):
         if lo >= hi:
-            return  # if there are 0 or 1 elements in A
+            return
 
         if lo - hi == 1:
-            if A[lo] < A[hi]:  # if 2 elements, sort them
+            if A[lo] < A[hi]:
                 sorting.__array_swap(A, lo, hi)
             return
 
         i, j = sorting.__qs_part(A, lo, hi)
-        sorting.quick_sort_improved(A, lo, i)  # recursively sort partition 1 (elements < pivot)
-        sorting.quick_sort_improved(A, j, hi)  # recursively sort partition 2 (elements > pivot)
-        # no need to sort between 'i' and 'j' because those items == pivot
+        sorting.quick_sort_improved(A, lo, i)
+        sorting.quick_sort_improved(A, j, hi)
 
 def write_in_file(output_list,array):
     with open(output_list, 'w') as g:
@@ -283,23 +275,11 @@ def write_in_file(output_list,array):
         g.write("\n")
         running_times.append(running_time)
 
-        '''
-        temp[:] = array
-        start_time = time.time()
-        sorting.quick_sort(temp, 0, len(temp) - 1)
-        running_time = time.time() - start_time
-        g.write(f"Quick sort: {running_time}s\n")
-        for x in temp:
-            g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(running_time)
-        '''
-
         temp[:] = array
         start_time = time.time()
         sorting.quick_sort_improved(temp, 0, len(temp) - 1)
         running_time = time.time() - start_time
-        g.write(f"Quick sort improved: {running_time}s\n")
+        g.write(f"Quick sort: {running_time}s\n")
         # for x in temp:
         #     g.write(f"{x} ")
         g.write("\n")
@@ -358,7 +338,7 @@ def prepare_output_files(csv_file):
         writer = csv.writer(g)
         writer.writerow(["Insertion sort", "Selection sort", "Bubble sort", "Merge sort", "Quick sort (improved)", "Counting sort", "Heap sort", "Radix sort"])
 
-def just_work_already_pls(running_times_collection,csv_file):
+def write_running_times(running_times_collection,csv_file):
     with open(csv_file, "a") as g:
         writer = csv.writer(g)
         writer.writerows(running_times_collection)
@@ -378,11 +358,10 @@ for i in range(number_of_runs):
     avg_running_times_random = []
     avg_running_times_reversed = []
     avg_running_times_nearly_sorted = []
+
     #Generate random numbers and read them from a file into a list
     randomNumberGeneratorFiles()
     readInList(array, file_with_numbers="random_numbers")
-
-    #--------------------------------------------------
 
     #Run the sorting algorithms on previously randomised list
     #and save running times in a list.
@@ -391,8 +370,6 @@ for i in range(number_of_runs):
 
     #Empty the list for use down the line
     running_times = []
-
-    #--------------------------------------------------
 
     #Create a reverse-sorted list and read them from a file to a list
     with open("sorted_reversed", 'w') as g:
@@ -411,8 +388,6 @@ for i in range(number_of_runs):
 
     # Empty the list for use down the line
     running_times = []
-
-    # --------------------------------------------------
 
     # Create a nearly-sorted list and read them from a file to a list
     with open("nearly_sorted", 'w') as g:
@@ -433,7 +408,7 @@ for i in range(number_of_runs):
     running_times = []
 
     # Write the average running times in a file
-    just_work_already_pls(avg_running_times_random,csv_file="average_from_random.csv")
-    just_work_already_pls(avg_running_times_reversed,csv_file="average_from_reversed.csv")
-    just_work_already_pls(avg_running_times_nearly_sorted,csv_file="average_from_nearly_sorted.csv")
+    write_running_times(avg_running_times_random,csv_file="average_from_random.csv")
+    write_running_times(avg_running_times_reversed,csv_file="average_from_reversed.csv")
+    write_running_times(avg_running_times_nearly_sorted,csv_file="average_from_nearly_sorted.csv")
 
