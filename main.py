@@ -1,6 +1,8 @@
 import random
 import time
 import csv
+import timeit
+import numpy as np
 
 number_of_elements = 10000
 range_of_numbers = 100000
@@ -107,7 +109,7 @@ class sorting:
         min_element = int(min(arr))
         range_of_elements = max_element - min_element + 1
 
-        count_arr = [0 for _ in range(range_of_elements)]
+        count_arr = [0 for _ in range(range_of_elements)]s
         output_arr = [0 for _ in range(len(arr))]
 
         for i in range(0, len(arr)):
@@ -239,84 +241,138 @@ class sorting:
         sorting.quick_sort_improved(A, lo, i)
         sorting.quick_sort_improved(A, j, hi)
 
+def call_insertion(running_times = []): # Call functions are overloaded, they can be used to get only the time it takes for the function to run with timeit module by calling them without arguments
+    temp = sorting.insertion_sort(sorting(array))
+    # g.write(f"Insertion sort: {temp[1]}s\n")
+    # # for x in temp[0]:
+    # #     g.write(f"{x} ")
+    # g.write("\n")
+    running_times.append(temp[1])
+
+def call_selection(running_times = []):
+    temp = sorting.selection_sort(sorting(array))
+    # g.write(f"Selection sort: {temp[1]}s\n")
+    # # for x in temp[0]:
+    # #     g.write(f"{x} ")
+    # g.write("\n")
+    running_times.append(temp[1])
+
+def call_bubble(running_times = []):
+    temp = sorting.bubble_sort(sorting(array))
+    # g.write(f"Bubble sort: {temp[1]}s\n")
+    # # for x in temp[0]:
+    # #     g.write(f"{x} ")
+    # g.write("\n")
+    running_times.append(temp[1])
+
+def call_merge(running_times = []):
+    temp = []
+    temp[:] = array
+    start_time = time.time()
+    sorting.merge_sort(temp)
+    running_time = time.time() - start_time
+    # g.write(f"Merge sort: {running_time}s\n")
+    # # for x in temp:
+    # #     g.write(f"{x} ")
+    # g.write("\n")
+    running_times.append(running_time)
+
+def call_quick(running_times = []):
+    temp = []
+    temp[:] = array
+    start_time = time.time()
+    sorting.quick_sort_improved(temp, 0, len(temp) - 1)
+    running_time = time.time() - start_time
+    # g.write(f"Quick sort: {running_time}s\n")
+    # # for x in temp:
+    # #     g.write(f"{x} ")
+    # g.write("\n")
+    running_times.append(running_time)
+
+def call_counting(running_times = []):
+    temp = []
+    temp[:] = array
+    start_time = time.time()
+    sorting.counting_sort(temp)
+    running_time = time.time() - start_time
+    # g.write(f"Counting sort: {running_time}s\n")
+    # # for x in temp:
+    # #     g.write(f"{x} ")
+    # g.write("\n")
+    running_times.append(running_time)
+
+def call_heap(running_times = []):
+    temp = []
+    temp[:] = array
+    start_time = time.time()
+    sorting.heap_sort(temp)
+    running_time = time.time() - start_time
+    # g.write(f"Heap sort: {running_time}s\n")
+    # # for x in temp:
+    # #     g.write(f"{x} ")
+    # g.write("\n")
+    running_times.append(running_time)
+
+def call_radix(running_times = []):
+    temp = []
+    temp[:] = array
+    start_time = time.time()
+    sorting.radix_sort(temp)
+    running_time = time.time() - start_time
+    # g.write(f"Radix sort: {running_time}s\n")
+    # # for x in temp:
+    # #     g.write(f"{x} ")
+    # g.write("\n")
+    running_times.append(running_time)
+
 def write_in_file(output_list,array):
     with open(output_list, 'w') as g:
         running_times = []
 
-        temp = sorting.insertion_sort(sorting(array))
-        g.write(f"Insertion sort: {temp[1]}s\n")
-        # for x in temp[0]:
-        #     g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(temp[1])
+        call_insertion(running_times)
+        if np.isclose(running_times[0], 0.0, atol=1e-8):
+            running_times.pop()
+            running_times.append('{:.8f}'.format((timeit.timeit(lambda: call_insertion(), number=100)) / 100))
 
-        temp = sorting.selection_sort(sorting(array))
-        g.write(f"Selection sort: {temp[1]}s\n")
-        # for x in temp[0]:
-        #     g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(temp[1])
+        call_selection(running_times)
+        if np.isclose(running_times[1], 0.0, atol=1e-8):
+            running_times.pop()
+            running_times.append('{:.8f}'.format((timeit.timeit(lambda: call_selection(), number=100)) / 100))
 
-        temp = sorting.bubble_sort(sorting(array))
-        g.write(f"Bubble sort: {temp[1]}s\n")
-        # for x in temp[0]:
-        #     g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(temp[1])
+        call_bubble(running_times)
+        if np.isclose(running_times[2], 0.0, atol=1e-8):
+            running_times.pop()
+            running_times.append('{:.8f}'.format((timeit.timeit(lambda: call_bubble(), number=100)) / 100))
 
-        temp = []
-        temp[:] = array
-        start_time = time.time()
-        sorting.merge_sort(temp)
-        running_time = time.time() - start_time
-        g.write(f"Merge sort: {running_time}s\n")
-        # for x in temp:
-        #     g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(running_time)
+        call_merge(running_times)
+        if np.isclose(running_times[3], 0.0, atol=1e-8):
+            running_times.pop()
+            running_times.append('{:.8f}'.format((timeit.timeit(lambda: call_merge(), number=100)) / 100))
 
-        temp[:] = array
-        start_time = time.time()
-        sorting.quick_sort_improved(temp, 0, len(temp) - 1)
-        running_time = time.time() - start_time
-        g.write(f"Quick sort: {running_time}s\n")
-        # for x in temp:
-        #     g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(running_time)
+        call_quick(running_times)
+        if np.isclose(running_times[4], 0.0, atol=1e-8):
+            running_times.pop()
+            running_times.append('{:.8f}'.format((timeit.timeit(lambda: call_quick(), number=100)) / 100))
 
-        temp[:] = array
-        start_time = time.time()
-        sorting.counting_sort(temp)
-        running_time = time.time() - start_time
-        g.write(f"Counting sort: {running_time}s\n")
-        # for x in temp:
-        #     g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(running_time)
+        call_counting(running_times)
+        if np.isclose(running_times[5], 0.0, atol=1e-8):
+            running_times.pop()
+            running_times.append('{:.8f}'.format((timeit.timeit(lambda: call_counting(), number=100)) / 100))
 
-        temp[:] = array
-        start_time = time.time()
-        sorting.heap_sort(temp)
-        running_time = time.time() - start_time
-        g.write(f"Heap sort: {running_time}s\n")
-        # for x in temp:
-        #     g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(running_time)
+        call_heap(running_times)
+        if np.isclose(running_times[6], 0.0, atol=1e-8):
+            running_times.pop()
+            running_times.append('{:.8f}'.format((timeit.timeit(lambda: call_heap(), number=100)) / 100))
 
-        temp[:] = array
-        start_time = time.time()
-        sorting.radix_sort(temp)
-        running_time = time.time() - start_time
-        g.write(f"Radix sort: {running_time}s\n")
-        # for x in temp:
-        #     g.write(f"{x} ")
-        g.write("\n")
-        running_times.append(running_time)
+        call_radix(running_times)
+        if np.isclose(running_times[7], 0.0, atol=1e-8):
+            running_times.pop()
+            running_times.append('{:.8f}'.format((timeit.timeit(lambda: call_radix(), number=100)) / 100))
+
+        for i in range(0,8):
+            running_times[i] = '{:.8f}'.format(float(running_times[i]))
 
         return running_times
-
 
 def sortNearlySortedArray(arr, k):
     for i in range(1, len(arr)):
@@ -334,12 +390,12 @@ def sortNearlySortedArray(arr, k):
 
 
 def prepare_output_files(csv_file):
-    with open(csv_file, "w") as g:
+    with open(csv_file, "w",newline="") as g:
         writer = csv.writer(g)
         writer.writerow(["Insertion sort", "Selection sort", "Bubble sort", "Merge sort", "Quick sort (improved)", "Counting sort", "Heap sort", "Radix sort"])
 
 def write_running_times(running_times_collection,csv_file):
-    with open(csv_file, "a") as g:
+    with open(csv_file, "a",newline="") as g:
         writer = csv.writer(g)
         writer.writerows(running_times_collection)
 
@@ -347,9 +403,9 @@ number_of_elements = int(input("(1/3) How many numbers do you want your list to 
 range_of_numbers = int(input("(2/3) How large should the range be? (Eg. '10000' for the range 1-10000)? "))
 number_of_runs = int(input("(3/3) For how many iterations would you like your program to run? "))
 
-prepare_output_files("average_from_random.csv")
-prepare_output_files("average_from_reversed.csv")
-prepare_output_files("average_from_nearly_sorted.csv")
+prepare_output_files("Random_Runtimes_Data.csv")
+prepare_output_files("Reverse_Runtimes_Data.csv")
+prepare_output_files("Nearly_Sorted_Runtimes_Data.csv")
 
 for i in range(number_of_runs):
 
@@ -408,7 +464,7 @@ for i in range(number_of_runs):
     running_times = []
 
     # Write the average running times in a file
-    write_running_times(avg_running_times_random,csv_file="average_from_random.csv")
-    write_running_times(avg_running_times_reversed,csv_file="average_from_reversed.csv")
-    write_running_times(avg_running_times_nearly_sorted,csv_file="average_from_nearly_sorted.csv")
+    write_running_times(avg_running_times_random,csv_file="Random_Runtimes_Data.csv")
+    write_running_times(avg_running_times_reversed,csv_file="Reverse_Runtimes_Data.csv")
+    write_running_times(avg_running_times_nearly_sorted,csv_file="Nearly_Sorted_Runtimes_Data.csv")
 
